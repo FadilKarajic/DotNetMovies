@@ -4,39 +4,36 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DotNETMovies.Models;
-using DotNETMovies.ViewModels;
+
 
 namespace DotNETMovies.Controllers
 {
     public class MoviesController : Controller
     {
-        // GET: Movies
-        public ActionResult Random()
+        public ViewResult Index()
         {
-            var movie = new Movie() { Name="Something"};
-            var customers = new List<Customer>
-            {
-                new Customer {Name = "Customer 1"},
-                new Customer {Name = "Customer 2"}
-            };
-
-            var viewModel = new RandomMovieViewModel
-            {
-                Movie = movie,
-                Customers = customers
-            };
-
-            return View(viewModel);
-
+            var movies = GetMovies();
+            return View(movies);
         }
 
-        ////[Route("movies/released/{year}/{month:regex(\\d{4}):range(1,12)}")]
+        public ActionResult Details (int id)
+        {
+            var movie = GetMovies().SingleOrDefault(c => c.Id == id);
 
-        //public ActionResult ByReleaseDate (int year, int month)
-        //{
-        //    return Content(year + "/" + month);
-        //}
+            if (movie == null)
+                return HttpNotFound();
 
+            return View(movie);
+        }
         
+        private IEnumerable<Movie> GetMovies()
+        {
+            return new List<Movie>
+            {
+                new Movie {Id = 1, Name="The Fountain"},
+                new Movie {Id = 2, Name = "Cloud Atlas"}
+            };
+        }
+
     }
 }
