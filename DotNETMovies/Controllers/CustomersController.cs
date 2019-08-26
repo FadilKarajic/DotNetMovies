@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using DotNETMovies.Models;
 using System.Data.Entity;
+using DotNETMovies.ViewModels;
 
 namespace Vidly.Controllers
 {
@@ -20,6 +21,26 @@ namespace Vidly.Controllers
         {
             _context.Dispose();
         }
+
+        public ActionResult New()
+        {
+            var membershipTypes = _context.MembershipTypes.ToList();
+            var viewModel = new NewCustomerViewModel
+            {
+                MembershipTypes = membershipTypes
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Create (Customer customer)
+        {
+            _context.Customers.Add(customer);
+            _context.SaveChanges();
+            return RedirectToAction("Index", "Customers");
+        }
+
 
 
         public ViewResult Index()
